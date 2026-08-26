@@ -1,0 +1,38 @@
+# Τοπικό εξομοιωμένο περιβάλλον (Local Staging) — απαίτηση 10.
+# Τρέχει την ίδια εικόνα που παράγει το pipeline, μαζί με PostgreSQL.
+#
+#   docker compose up --build
+#   curl http://localhost:8000/health
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mmm-delay-reports:local
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      DATABASE_URL: postgresql+psycopg://mmm:mmm@db:5432/mmm
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: mmm
+      POSTGRES_PASSWORD: mmm
+      POSTGRES_DB: mmm
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mmm"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

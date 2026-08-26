@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+coverage.xml
+junit.xml
+htmlcov/
+
+# Linting caches
+.ruff_cache/
+.mypy_cache/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# Περιβάλλον — ποτέ στο repository
+.env
+.env.*
+!.env.example
+
+# Λειτουργικό σύστημα / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
