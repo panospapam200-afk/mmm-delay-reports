@@ -13,6 +13,7 @@ Crowdsourced σύστημα αναφοράς καθυστερήσεων σε γ�
 cd backend
 pip install -e ".[dev]"
 pytest --cov=app --cov-report=term-missing
+alembic upgrade head          # δημιουργεί το σχήμα της βάσης
 uvicorn app.main:app --reload
 ```
 
@@ -64,8 +65,10 @@ Commits. Εκδόσεις με semantic versioning tags.
 
 ## Κατάσταση
 
-- ✅ Πυρήνας επιχειρησιακής λογικής, 68 unit tests, 100% κάλυψη
-- ✅ CI/CD workflow, Dockerfile, τοπικό staging
-- 🟡 API endpoints και βάση δεδομένων
+- ✅ Πυρήνας επιχειρησιακής λογικής (καθαρές συναρτήσεις, 100% κάλυψη)
+- ✅ CI/CD workflow τεσσάρων σταδίων, Dockerfile, τοπικό staging
+- ✅ Μοντέλο δεδομένων, Alembic migrations, seed γραμμών
+- ✅ **104 tests, 99% συνολική κάλυψη**
+- 🟡 API endpoints και authentication
 - ⬜ React frontend
 - ⬜ Deployment στο Render

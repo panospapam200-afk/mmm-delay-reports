@@ -38,7 +38,7 @@ addopts = "-v --strict-markers"
 
 [tool.coverage.run]
 source = ["app"]
-omit = ["app/seed.py", "*/__init__.py"]
+omit = ["*/__init__.py"]
 
 [tool.coverage.report]
 show_missing = true
@@ -47,6 +47,10 @@ skip_covered = false
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+# Τα αρχεία migration παράγονται από το Alembic. Η μορφοποίησή τους δεν είναι
+# δική μας απόφαση, και το να τα «διορθώνουμε» με το χέρι μετά από κάθε
+# autogenerate εισάγει διαφορές που δεν προσφέρουν τίποτα.
+extend-exclude = ["migrations/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "C4"]
@@ -55,3 +59,4 @@ select = ["E", "F", "I", "UP", "B", "SIM", "C4"]
 python_version = "3.11"
 strict = true
 files = ["app"]
+exclude = ["^migrations/"]
