@@ -13,6 +13,7 @@ Crowdsourced σύστημα αναφοράς καθυστερήσεων σε γ�
 cd backend
 pip install -e ".[dev]"
 pytest --cov=app --cov-report=term-missing
+alembic upgrade head          # δημιουργεί το σχήμα της βάσης
 uvicorn app.main:app --reload
 ```
 
@@ -34,6 +35,23 @@ curl http://localhost:8000/health
 | [`docs/agent-log.md`](docs/agent-log.md) | Ημερολόγιο ανάπτυξης με coding agents |
 | [`PLAN.md`](PLAN.md) | Φάσεις και χρονοδιάγραμμα |
 | [`CLAUDE.md`](CLAUDE.md) | Κανόνες για coding agents |
+
+## API
+
+Διαδραστική τεκμηρίωση στο `/docs` όταν τρέχει η εφαρμογή (OpenAPI, παράγεται
+αυτόματα από τα σχήματα Pydantic).
+
+| Endpoint | Πρόσβαση |
+|---|---|
+| `GET /api/v1/lines` · `GET /api/v1/lines/{id}` · `/by-code/{code}` | Ελεύθερη |
+| `POST /api/v1/auth/register` · `/login` · `GET /auth/me` | — |
+| `POST /api/v1/reports` | Συνδεδεμένος χρήστης |
+| `POST /api/v1/reports/{id}/confirm` | Συνδεδεμένος χρήστης |
+| `GET /api/v1/admin/dashboard` | Ρόλος χειριστή |
+
+**Η ανάγνωση δεν απαιτεί λογαριασμό· η υποβολή απαιτεί.** Απόφαση από τη User
+Journey Α: ο περιστασιακός επιβάτης που συναντά οθόνη εγγραφής κλείνει την
+εφαρμογή.
 
 ## Αρχιτεκτονική με μία πρόταση
 
@@ -64,8 +82,10 @@ Commits. Εκδόσεις με semantic versioning tags.
 
 ## Κατάσταση
 
-- ✅ Πυρήνας επιχειρησιακής λογικής, 68 unit tests, 100% κάλυψη
-- ✅ CI/CD workflow, Dockerfile, τοπικό staging
-- 🟡 API endpoints και βάση δεδομένων
+- ✅ Πυρήνας επιχειρησιακής λογικής (καθαρές συναρτήσεις, 100% κάλυψη)
+- ✅ CI/CD workflow τεσσάρων σταδίων, Dockerfile, τοπικό staging
+- ✅ Μοντέλο δεδομένων, Alembic migrations, seed γραμμών
+- ✅ REST API: εγγραφή/σύνδεση με JWT, ρόλοι, αναφορές, ψήφοι, dashboard
+- ✅ **149 tests, 99% συνολική κάλυψη**
 - ⬜ React frontend
 - ⬜ Deployment στο Render

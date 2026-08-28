@@ -9,8 +9,8 @@
 | Φάση | Περίοδος | Στόχος | Κατάσταση |
 |---|---|---|---|
 | 0 | 26/08 – 31/08 | Ανάλυση, repo, planning files, σκελετός CI | ✅ Ολοκληρώθηκε |
-| 1 | 01/09 – 07/09 | Πυρήνας λογικής, unit tests, πράσινο pipeline | 🟡 Σε εξέλιξη |
-| 2 | 08/09 – 14/09 | API endpoints, βάση, React frontend | ⬜ |
+| 1 | 01/09 – 07/09 | Πυρήνας λογικής, unit tests, πράσινο pipeline | ✅ Ολοκληρώθηκε νωρίτερα |
+| 2 | 08/09 – 14/09 | API endpoints, βάση, React frontend | 🟡 Σε εξέλιξη |
 | 3 | 15/09 – 20/09 | Docker, CD, deployment στο Render, screenshots | ⬜ |
 | 4 | 21/09 – 23/09 | Συγγραφή ενιαίου παραδοτέου | ⬜ |
 
@@ -24,7 +24,7 @@
 - [x] Σκελετός backend, workflow CI, Dockerfile, docker-compose
 - [ ] **Επίσημη ανάθεση θέματος από τον καθηγητή** ← μπλοκάρει τα πάντα
 
-## Φάση 1 — Πυρήνας 🟡
+## Φάση 1 — Πυρήνας ✅
 
 - [x] `app/core/status.py` — ταξινόμηση κατάστασης
 - [x] `app/core/aggregation.py` — μηχανή συνάθροισης
@@ -32,18 +32,19 @@
 - [x] `app/core/reliability.py` — βαθμός αξιοπιστίας
 - [x] 68 unit tests, 100% κάλυψη πυρήνα
 - [x] `/health` endpoint και smoke test
-- [ ] Push στο GitHub, πρώτο πράσινο run → **screenshot**
+- [x] Push στο GitHub, πρώτο πράσινο run (μετά από διόρθωση) → **screenshot**
 - [ ] Branch protection στο `main` με required checks → **screenshot**
-- [ ] Μοντέλα SQLAlchemy και πρώτο Alembic migration
+- [x] Μοντέλα SQLAlchemy και πρώτο Alembic migration
 
-## Φάση 2 — API και frontend ⬜
+## Φάση 2 — API και frontend 🟡
 
-- [ ] Authentication με JWT, ρόλοι `passenger` / `operator`
-- [ ] `POST /api/v1/reports` με έλεγχο ρυθμού → US-01, US-02
-- [ ] `GET /api/v1/lines/{id}/status` → US-04, US-05
-- [ ] `POST /api/v1/reports/{id}/confirm` → US-03
-- [ ] `GET /api/v1/admin/dashboard` με έλεγχο ρόλου → US-08
-- [ ] Integration tests με `TestClient`
+- [x] Μοντέλα, migrations, seed δεδομένα, υπηρεσία κατάστασης γραμμής
+- [x] Authentication με JWT, ρόλοι `passenger` / `operator`
+- [x] `POST /api/v1/reports` με έλεγχο ρυθμού → US-01, US-02
+- [x] `GET /api/v1/lines` και `/lines/{id}` → US-04, US-05
+- [x] `POST /api/v1/reports/{id}/confirm` → US-03
+- [x] `GET /api/v1/admin/dashboard` με έλεγχο ρόλου → US-08
+- [x] Integration tests με `TestClient` (149 tests συνολικά)
 - [ ] React: λίστα γραμμών, φόρμα αναφοράς, dashboard χειριστή
 - [ ] Vitest για τα κρίσιμα components
 

@@ -5,25 +5,28 @@
 ## Αμέσως επόμενα
 
 1. **Email στον καθηγητή** για επίσημη ανάθεση του θέματος.
-2. `git init` και πρώτο commit· δημιουργία repo στο GitHub.
-3. Ενεργοποίηση branch protection στο `main`:
-   *Settings → Branches → Add rule → Require status checks* (`lint`, `test`).
-4. Push· επιβεβαίωση ότι το pipeline είναι πράσινο· **screenshot**.
+2. Ενεργοποίηση branch protection στο `main` με required checks· **screenshot**.
+3. Merge του `feat/data-model` μέσω PR· **screenshot** του PR με πράσινα checks.
 
-## Επόμενο feature branch: `feat/data-model`
+## Ολοκληρωμένα feature branches
 
-- [ ] `app/models.py` — User, Line, Stop, Report, Confirmation
-- [ ] `app/db.py` — session factory, SQLite στα tests
-- [ ] Πρώτο Alembic migration
-- [ ] `app/seed.py` — υπαρκτές γραμμές και στάσεις
+- `fix/ci-image-name` — κανονικοποίηση ονόματος Docker image
+- `feat/data-model` — μοντέλα, migrations, seed, υπηρεσία κατάστασης γραμμής
+- `feat/auth-and-api` — JWT, ρόλοι, endpoints γραμμών/αναφορών/dashboard
+
+## Επόμενο feature branch: `feat/frontend-shell`
+
+- [ ] Vite + React + TypeScript, κλήσεις στο API
+- [ ] Λίστα γραμμών με χρωματική ένδειξη κατάστασης και βαθμό εμπιστοσύνης
+- [ ] Φόρμα υποβολής αναφοράς, χειρισμός του 429
+- [ ] Οθόνη χειριστή
+- [ ] Vitest για τα κρίσιμα components
 
 ## Μετά
 
-- `feat/auth` — εγγραφή, σύνδεση, JWT, ρόλοι
-- `feat/reports-api` — υποβολή αναφοράς με έλεγχο ρυθμού
-- `feat/status-api` — endpoint κατάστασης γραμμής
-- `feat/frontend-shell` — Vite, routing, κλήσεις API
-- `feat/operator-dashboard` — οθόνη χειριστή
+- Multi-stage Dockerfile που χτίζει και σερβίρει το frontend
+- Υπηρεσία στο Render, `RENDER_DEPLOY_HOOK` και `JWT_SECRET` ως secrets
+- Συλλογή screenshots για τα σημεία 9 και 10
 
 ## Σκόπιμα εκτός εύρους
 
