@@ -15,8 +15,6 @@ WORKDIR /build
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Πρώτα μόνο το pyproject: αν δεν αλλάξουν οι εξαρτήσεις, το Docker
-# επαναχρησιμοποιεί αυτό το layer από την cache.
 COPY backend/pyproject.toml ./
 COPY backend/app ./app
 RUN pip install .
@@ -31,19 +29,26 @@ ENV PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH"
 
 # Η εφαρμογή δεν τρέχει ως root.
-RUN useradd --create-home --uid 10001 appuser
+RUN useradd --create-home --uid 10001 appuser \
+    && mkdir -p /app \
+    && chown appuser:appuser /app
 
 WORKDIR /app
 
 COPY --from=builder /opt/venv /opt/venv
 COPY --chown=appuser:appuser backend/app ./app
+# Τα migrations ταξιδεύουν μαζί με τον κώδικα: το image πρέπει να μπορεί να
+# ανεβάσει μόνο του το σχήμα της βάσης στην έκδοση που περιμένει ο κώδικας.
+COPY --chown=appuser:appuser backend/migrations ./migrations
+COPY --chown=appuser:appuser backend/alembic.ini ./alembic.ini
 
 USER appuser
 
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 \
     CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"
 
-# Το Render περνά τη θύρα μέσω της μεταβλητής PORT.
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Πρώτα τα migrations, μετά ο server. Αν τα migrations αποτύχουν, το container
+# δεν ξεκινά — προτιμότερο από μια εφαρμογή που τρέχει πάνω σε λάθος σχήμα.
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
