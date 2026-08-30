@@ -120,17 +120,35 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Το όνομα ενός Docker image υπακούει σε αυστηρότερους κανόνες από το
+      # όνομα ενός repository: κάθε τμήμα της διαδρομής πρέπει να ξεκινά με
+      # πεζό γράμμα ή ψηφίο. Ένα repository με κεφαλαία ή με παύλα στην αρχή
+      # παράγει άκυρο όνομα image και το push αποτυγχάνει. Το κανονικοποιούμε
+      # εδώ αντί να βασιζόμαστε στο ότι το repository θα λέγεται πάντα «σωστά».
+      - name: Κανονικοποίηση ονόματος image
+        id: img
+        run: |
+          raw="${{ github.repository }}"
+          owner="${raw%%/*}"
+          repo="${raw##*/}"
+          safe="$(printf '%s/%s' "$owner" "$repo" \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed -E 's#/[^a-z0-9]+#/#')"
+          echo "name=$safe" >> "$GITHUB_OUTPUT"
+          echo "Όνομα image: ghcr.io/$safe"
+
       - name: Υπολογισμός ετικετών image
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ env.IMAGE_NAME }}
+          images: ghcr.io/${{ steps.img.outputs.name }}
           tags: |
             type=sha,prefix=sha-
             type=ref,event=branch
             type=semver,pattern={{version}}
 
       - name: Build και push
+        id: push
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -140,16 +158,24 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Το smoke test τρέχει το image μέσω του digest που μόλις δημοσιεύτηκε,
+      # όχι μέσω ετικέτας που ξαναφτιάχνουμε με το χέρι: έτσι είναι αδύνατο να
+      # δοκιμάσουμε κατά λάθος διαφορετικό image από αυτό που χτίστηκε.
       - name: Smoke test του container
+        env:
+          IMAGE: ghcr.io/${{ steps.img.outputs.name }}@${{ steps.push.outputs.digest }}
         run: |
-          docker run -d --name smoke -p 8000:8000 ghcr.io/${{ env.IMAGE_NAME }}:sha-$(git rev-parse --short HEAD)
-          for i in $(seq 1 20); do
+          docker run -d --name smoke -p 8000:8000 "$IMAGE"
+          for _ in $(seq 1 20); do
             if curl -fsS http://localhost:8000/health; then
-              echo "Το container απαντά." && exit 0
+              echo "Το container απαντά."
+              exit 0
             fi
             sleep 2
           done
-          echo "Το container δεν απάντησε στο /health" && docker logs smoke && exit 1
+          echo "Το container δεν απάντησε στο /health"
+          docker logs smoke
+          exit 1
 
   # ---------------------------------------------------------------- ΣΤΑΔΙΟ 4
   deploy:

@@ -50,6 +50,7 @@
 
 ## Φάση 3 — Παράδοση ⬜
 
+- [x] `render.yaml` (Infrastructure as Code) και τεκμηρίωση deployment
 - [ ] Multi-stage Dockerfile με το build του frontend
 - [ ] Push image στο GHCR με ετικέτες `sha-` και `v`
 - [ ] Υπηρεσία στο Render + `RENDER_DEPLOY_HOOK` secret

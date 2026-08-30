@@ -9,7 +9,25 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+__all__ = ["Settings", "get_settings", "normalize_database_url"]
+
+# Οι πάροχοι φιλοξενίας (Render, Heroku, Railway) δίνουν URL της μορφής
+# postgres:// ή postgresql://. Το SQLAlchemy 2 όμως χρειάζεται ρητά τον οδηγό:
+# postgresql+psycopg://. Χωρίς μετατροπή, η εφαρμογή σκάει στην εκκίνηση με
+# «Can't load plugin: sqlalchemy.dialects:postgres» — και σκάει ΜΟΝΟ στην
+# παραγωγή, γιατί τοπικά τρέχει SQLite.
+_POSTGRES_PREFIXES = ("postgres://", "postgresql://")
+
+
+def normalize_database_url(url: str) -> str:
+    """Προσθέτει τον οδηγό psycopg σε URL της PostgreSQL, αν λείπει."""
+    for prefix in _POSTGRES_PREFIXES:
+        if url.startswith(prefix):
+            return "postgresql+psycopg://" + url[len(prefix) :]
+    return url
 
 
 class Settings(BaseSettings):
@@ -26,6 +44,11 @@ class Settings(BaseSettings):
     # repository. Ένα μυστικό μέσα στον κώδικα δεν είναι μυστικό.
     jwt_secret: str = "dev-only-insecure-secret-change-in-production"
     jwt_expire_minutes: int = 60 * 24
+
+    @field_validator("database_url")
+    @classmethod
+    def _normalize(cls, value: str) -> str:
+        return normalize_database_url(value)
 
 
 @lru_cache

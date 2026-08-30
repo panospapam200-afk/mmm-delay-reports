@@ -32,6 +32,7 @@ curl http://localhost:8000/health
 | [`docs/02-user-stories.md`](docs/02-user-stories.md) | User Stories με κριτήρια αποδοχής |
 | [`docs/03-user-journeys.md`](docs/03-user-journeys.md) | User Journeys ανά ρόλο |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Αρχιτεκτονική, στοίβα, απορριφθείσες εναλλακτικές |
+| [`docs/04-deployment.md`](docs/04-deployment.md) | Packaging, Continuous Delivery, Render |
 | [`docs/agent-log.md`](docs/agent-log.md) | Ημερολόγιο ανάπτυξης με coding agents |
 | [`PLAN.md`](PLAN.md) | Φάσεις και χρονοδιάγραμμα |
 | [`CLAUDE.md`](CLAUDE.md) | Κανόνες για coding agents |

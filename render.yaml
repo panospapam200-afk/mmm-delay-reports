@@ -1,0 +1,37 @@
+# Blueprint του Render — Infrastructure as Code.
+#
+# Αντί να στηθεί η υπηρεσία με κλικ στη διεπαφή, η υποδομή περιγράφεται σε
+# αρχείο που ζει μέσα στο repository. Ό,τι στήνεται με κλικ δεν τεκμηριώνεται,
+# δεν εκδίδεται και δεν ξαναστήνεται· ό,τι περιγράφεται εδώ, ναι.
+#
+# Χρήση: Render → New → Blueprint → επιλογή αυτού του repository.
+
+services:
+  - type: web
+    name: mmm-delay-reports
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # Το Render θεωρεί την υπηρεσία υγιή μόνο όταν απαντήσει αυτό το endpoint.
+    # Αν τα migrations αποτύχουν κατά την εκκίνηση, το deployment σταματά εδώ
+    # αντί να βγει ζωντανά μια εφαρμογή πάνω σε λάθος σχήμα.
+    healthCheckPath: /health
+    autoDeploy: false # Το deployment το ενεργοποιεί το pipeline, όχι το Render.
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true # Το Render παράγει τυχαίο μυστικό· δεν μπαίνει στο repo.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mmm-delay-reports-db
+          property: connectionString
+      - key: SQL_ECHO
+        value: "false"
+
+databases:
+  - name: mmm-delay-reports-db
+    plan: free
+    databaseName: mmm
+    user: mmm
+    region: frankfurt
