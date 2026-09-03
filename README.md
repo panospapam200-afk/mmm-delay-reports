@@ -84,9 +84,22 @@ Commits. Εκδόσεις με semantic versioning tags.
 ## Κατάσταση
 
 - ✅ Πυρήνας επιχειρησιακής λογικής (καθαρές συναρτήσεις, 100% κάλυψη)
-- ✅ CI/CD workflow τεσσάρων σταδίων, Dockerfile, τοπικό staging
 - ✅ Μοντέλο δεδομένων, Alembic migrations, seed γραμμών
 - ✅ REST API: εγγραφή/σύνδεση με JWT, ρόλοι, αναφορές, ψήφοι, dashboard
-- ✅ **149 tests, 99% συνολική κάλυψη**
-- ⬜ React frontend
-- ⬜ Deployment στο Render
+- ✅ **157 tests, 98% συνολική κάλυψη**
+- ✅ CI/CD workflow τεσσάρων σταδίων, Dockerfile, τοπικό staging
+- ✅ **Ζωντανό deployment** σε Render (Docker + PostgreSQL), αυτόματο από το `main`
+
+Χωρίς γραφική διεπαφή, κατόπιν συνειδητής οριοθέτησης — η διαδραστική
+τεκμηρίωση OpenAPI στο `/docs` καλύπτει την επίδειξη κάθε λειτουργίας.
+
+## Ζωντανή εφαρμογή
+
+| | |
+|---|---|
+| Εφαρμογή | https://mmm-delay-reports.onrender.com |
+| Τεκμηρίωση API | https://mmm-delay-reports.onrender.com/docs |
+| Έλεγχος ζωτικότητας | https://mmm-delay-reports.onrender.com/health |
+
+Η δωρεάν βαθμίδα αναστέλλει την υπηρεσία μετά από 15 λεπτά αδράνειας· η πρώτη
+κλήση μπορεί να αργήσει έως 50 δευτερόλεπτα.

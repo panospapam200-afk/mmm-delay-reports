@@ -59,7 +59,8 @@ ruff check . && ruff format --check .
 
 ## Πράγματα που έχουν ήδη αποφασιστεί — μην τα ξανασυζητάς
 
-- Στοίβα: FastAPI + React + PostgreSQL. Deployment: Docker → Render.
+- Στοίβα: FastAPI + PostgreSQL. Deployment: Docker → Render.
+- Χωρίς γραφική διεπαφή. Το `/docs` του OpenAPI είναι η διεπαφή επίδειξης.
 - Branching: trunk-based με βραχύβια feature branches, **όχι** Git Flow.
 - Διάμεσος, όχι μέσος όρος, σε κάθε συνάθροιση.
 - Το `UNKNOWN` είναι έγκυρη έξοδος. Ποτέ δεν μαντεύουμε κατάσταση γραμμής.

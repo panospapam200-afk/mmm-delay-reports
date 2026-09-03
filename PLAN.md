@@ -1,6 +1,6 @@
 # PLAN.md
 
-Πλάνο εκτέλεσης. Ενημερώνεται στο τέλος κάθε φάσης.
+Πλάνο εκτέλεσης. Ενημερώθηκε στο τέλος κάθε φάσης.
 
 **Προθεσμία: Πέμπτη 24/09/2026 23:55.** Στόχος υποβολής: **Τετάρτη 23/09**.
 
@@ -8,11 +8,15 @@
 
 | Φάση | Περίοδος | Στόχος | Κατάσταση |
 |---|---|---|---|
-| 0 | 26/08 – 31/08 | Ανάλυση, repo, planning files, σκελετός CI | ✅ Ολοκληρώθηκε |
-| 1 | 01/09 – 07/09 | Πυρήνας λογικής, unit tests, πράσινο pipeline | ✅ Ολοκληρώθηκε νωρίτερα |
-| 2 | 08/09 – 14/09 | API endpoints, βάση, React frontend | 🟡 Σε εξέλιξη |
-| 3 | 15/09 – 20/09 | Docker, CD, deployment στο Render, screenshots | ⬜ |
-| 4 | 21/09 – 23/09 | Συγγραφή ενιαίου παραδοτέου | ⬜ |
+| 0 | 26/08 – 28/08 | Ανάλυση, repo, planning files, σκελετός CI | ✅ Ολοκληρώθηκε |
+| 1 | 28/08 | Πυρήνας λογικής, unit tests, πράσινο pipeline | ✅ Ολοκληρώθηκε |
+| 2 | 28/08 – 30/08 | Μοντέλο δεδομένων, migrations, REST API | ✅ Ολοκληρώθηκε |
+| 3 | 30/08 – 03/09 | Docker, CD, deployment στο Render, screenshots | ✅ Ολοκληρώθηκε |
+| 4 | 03/09 | Συγγραφή ενιαίου παραδοτέου | ✅ Ολοκληρώθηκε |
+
+Οι φάσεις ολοκληρώθηκαν νωρίτερα από το αρχικό χρονοδιάγραμμα. Ο χρόνος που
+περίσσεψε επενδύθηκε σε ποιότητα ελέγχων και τεκμηρίωσης αντί για επέκταση του
+εύρους — βλ. §11.1 του παραδοτέου.
 
 ## Φάση 0 — Ανάλυση και στήσιμο ✅
 
@@ -22,7 +26,6 @@
 - [x] User Stories με κριτήρια αποδοχής → `docs/02-user-stories.md`
 - [x] User Journeys → `docs/03-user-journeys.md`
 - [x] Σκελετός backend, workflow CI, Dockerfile, docker-compose
-- [ ] **Επίσημη ανάθεση θέματος από τον καθηγητή** ← μπλοκάρει τα πάντα
 
 ## Φάση 1 — Πυρήνας ✅
 
@@ -30,46 +33,43 @@
 - [x] `app/core/aggregation.py` — μηχανή συνάθροισης
 - [x] `app/core/ratelimit.py` — περιορισμός ρυθμού
 - [x] `app/core/reliability.py` — βαθμός αξιοπιστίας
-- [x] 68 unit tests, 100% κάλυψη πυρήνα
 - [x] `/health` endpoint και smoke test
-- [x] Push στο GitHub, πρώτο πράσινο run (μετά από διόρθωση) → **screenshot**
-- [ ] Branch protection στο `main` με required checks → **screenshot**
-- [x] Μοντέλα SQLAlchemy και πρώτο Alembic migration
+- [x] Push στο GitHub, πρώτο πράσινο run μετά από διόρθωση
+- [x] Branch protection στο `main` με required checks
 
-## Φάση 2 — API και frontend 🟡
+## Φάση 2 — Δεδομένα και API ✅
 
-- [x] Μοντέλα, migrations, seed δεδομένα, υπηρεσία κατάστασης γραμμής
-- [x] Authentication με JWT, ρόλοι `passenger` / `operator`
+- [x] Μοντέλα SQLAlchemy και Alembic migration `0001_initial`
+- [x] Test απόκλισης μοντέλων και migrations
+- [x] `app/services/line_status.py` — γέφυρα βάσης και πυρήνα
+- [x] `app/seed.py` — ιδεμπόσταστο seed με υπαρκτές γραμμές
+- [x] Authentication με JWT, ρόλοι `PASSENGER` / `OPERATOR`
 - [x] `POST /api/v1/reports` με έλεγχο ρυθμού → US-01, US-02
 - [x] `GET /api/v1/lines` και `/lines/{id}` → US-04, US-05
 - [x] `POST /api/v1/reports/{id}/confirm` → US-03
 - [x] `GET /api/v1/admin/dashboard` με έλεγχο ρόλου → US-08
-- [x] Integration tests με `TestClient` (149 tests συνολικά)
-- [ ] React: λίστα γραμμών, φόρμα αναφοράς, dashboard χειριστή
-- [ ] Vitest για τα κρίσιμα components
+- [x] Integration tests με `TestClient`
 
-## Φάση 3 — Παράδοση ⬜
+## Φάση 3 — Παράδοση ✅
 
-- [x] `render.yaml` (Infrastructure as Code) και τεκμηρίωση deployment
-- [ ] Multi-stage Dockerfile με το build του frontend
-- [ ] Push image στο GHCR με ετικέτες `sha-` και `v`
-- [ ] Υπηρεσία στο Render + `RENDER_DEPLOY_HOOK` secret
-- [ ] Τοπικό staging με `docker compose up` → **screenshot**
-- [ ] Ζωντανή εφαρμογή σε δημόσιο URL → **screenshot**
-- [ ] Ένα αποτυχημένο run που διορθώθηκε → **screenshot**
+- [x] Multi-stage `Dockerfile` και `docker-compose.yml` για τοπικό staging
+- [x] Push image στο GHCR με ετικέτες `sha-` και έκδοσης
+- [x] `render.yaml` (Infrastructure as Code)
+- [x] Υπηρεσία στο Render + PostgreSQL· `RENDER_DEPLOY_HOOK` ως secret
+- [x] Κανονικοποίηση URL PostgreSQL — σφάλμα ορατό μόνο στην παραγωγή
+- [x] Φόρτωση δεδομένων αναφοράς κατά την εκκίνηση του container
+- [x] Ζωντανή εφαρμογή σε δημόσια διεύθυνση
+- [x] Συλλογή αποδεικτικών στιγμιότυπων
 
-## Φάση 4 — Συγγραφή ⬜
+## Φάση 4 — Συγγραφή ✅
 
-- [ ] Σύνθεση των δέκα σημείων με τη σειρά της εκφώνησης
-- [ ] Ενσωμάτωση screenshots με λεζάντες
-- [ ] Έλεγχος: κάθε ισχυρισμός τεκμηριώνεται με screenshot ή commit
+- [x] Σύνθεση του ενιαίου παραδοτέου με τα δέκα σημεία της εκφώνησης
+- [x] Ενσωμάτωση δώδεκα στιγμιότυπων με λεζάντες
+- [x] Έλεγχος: κάθε ισχυρισμός τεκμηριώνεται με στιγμιότυπο ή commit
 - [ ] Υποβολή
 
-## Κίνδυνοι
+## Τι δεν έγινε, σκόπιμα
 
-| Κίνδυνος | Αντιμετώπιση |
-|---|---|
-| Καθυστέρηση στην ανάθεση θέματος | Η Φάση 0 δεν εξαρτάται από αυτήν· email σήμερα |
-| Το free tier του Render «κοιμάται» | Τα screenshots τραβιούνται αμέσως μετά το deploy |
-| Το frontend τρώει τον χρόνο της Φάσης 2 | Ελάχιστη διεπαφή· η βαθμολογία είναι στο pipeline |
-| Screenshots αφημένα για το τέλος | Λίστα στο `PLAN.md`· τραβιούνται στη φάση τους |
+- Γραφική διεπαφή χρήστη — βλ. `docs/ARCHITECTURE.md` και §11.1 του παραδοτέου
+- Ζωντανή σύνδεση σε GTFS, ειδοποιήσεις push, χάρτες
+- Caching εκτιμήσεων — καταγράφεται ως γνωστός περιορισμός
