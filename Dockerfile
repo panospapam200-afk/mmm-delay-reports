@@ -49,6 +49,14 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 \
     CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"
 
-# Πρώτα τα migrations, μετά ο server. Αν τα migrations αποτύχουν, το container
-# δεν ξεκινά — προτιμότερο από μια εφαρμογή που τρέχει πάνω σε λάθος σχήμα.
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Τρία στάδια με τη σειρά, και το καθένα πρέπει να πετύχει για να συνεχίσει το
+# επόμενο:
+#
+#   1. migrations  — το σχήμα φτάνει στην έκδοση που περιμένει ο κώδικας
+#   2. seed        — τα δεδομένα αναφοράς (γραμμές, στάσεις) υπάρχουν
+#   3. server      — η εφαρμογή δέχεται αιτήματα
+#
+# Το βήμα 2 γίνεται εδώ και όχι με το χέρι, επειδή η δωρεάν βαθμίδα του Render
+# δεν παρέχει πρόσβαση σε shell. Είναι ακίνδυνο σε κάθε επανεκκίνηση, γιατί η
+# seed() είναι ιδεμπόσταστη.
+CMD ["sh", "-c", "alembic upgrade head && python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

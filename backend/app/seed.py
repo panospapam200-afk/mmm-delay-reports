@@ -114,3 +114,29 @@ def seed(session: Session) -> int:
 
     session.commit()
     return added
+
+
+def main() -> None:
+    """Σημείο εισόδου για εκτέλεση ως script: ``python -m app.seed``.
+
+    Καλείται από το ``CMD`` του container, ανάμεσα στα migrations και στην
+    εκκίνηση του server. Λύνει ένα πρακτικό πρόβλημα: η δωρεάν βαθμίδα του
+    Render δεν παρέχει πρόσβαση σε shell, οπότε δεν υπάρχει τρόπος να τρέξει
+    κανείς την εντολή με το χέρι στην παραγωγή.
+
+    Είναι ασφαλές να εκτελείται σε κάθε εκκίνηση επειδή η ``seed()`` είναι
+    ιδεμπόσταστη — δεν προσθέτει ό,τι υπάρχει ήδη.
+    """
+    from app.db import SessionLocal
+
+    with SessionLocal() as session:
+        added = seed(session)
+
+    if added:
+        print(f"Seed: προστέθηκαν {added} γραμμές.")
+    else:
+        print("Seed: όλες οι γραμμές υπάρχουν ήδη, καμία αλλαγή.")
+
+
+if __name__ == "__main__":  # pragma: no cover - σημείο εισόδου, όχι λογική
+    main()
